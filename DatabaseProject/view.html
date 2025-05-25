@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><?php echo htmlspecialchars($image['title']); ?> - View</title>
+    <style>
+        body {
+            background-color: #181818;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #202020;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            color: #cc0000;
+            font-size: 26px;
+            margin: 0;
+        }
+        .back-btn {
+            padding: 8px 16px;
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .back-btn:hover {
+            background-color: #ff0000;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            background-color: #282828;
+            padding: 24px;
+            border-radius: 12px;
+        }
+        .image-box img {
+            width: 100%;
+            max-height: 700px;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.6);
+        }
+        .info {
+            margin-top: 20px;
+        }
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .uploader {
+            display: inline-block;
+            padding: 6px 14px;
+            background-color: #444;
+            color: #fff;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .description-box {
+            margin-top: 20px;
+            padding: 16px;
+            background-color: #1f1f1f;
+            border-radius: 8px;
+        }
+
+        .description-box h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #ccc;
+            border-bottom: 1px solid #444;
+            padding-bottom: 8px;
+        }
+
+        .description-box p {
+            font-size: 15px;
+            color: #ddd;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+        .tags-box {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #444;
+            color: #fff;
+            padding: 5px 10px;
+            margin: 5px 5px 0 0;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Picture View</h1>
+    <a class="back-btn" href="home.php">← Back to Home</a>
+</header>
+
+<div class="container">
+    <div class="image-box">
+        <img src="<?php echo htmlspecialchars($image['file_url']); ?>" alt="Image">
+    </div>
+    <div class="info">
+        <div class="title"><?php echo htmlspecialchars($image['title']); ?></div>
+        <div class="uploader">
+    
+          <span>Uploaded by <strong><?php echo htmlspecialchars($image['username']); ?></strong></span>
+          <span style="color: #ccc;">Subscribers: <?php echo $subscriberCount; ?></span>
+
+         <?php if (!$isUploader): ?>
+        <form action="subscriber.php" method="post" style="margin: 0;">
+            <input type="hidden" name="subscribed_to_id" value="<?php echo $uploader_id; ?>">
+            <input type="hidden" name="video_id" value="<?php echo $video_id; ?>">
+            <button type="submit"
+                style="padding: 6px 14px; border: none; border-radius: 20px; cursor: pointer;
+                <?php echo $isSubscribed ? 'background-color: #444; color: white;' : 'background-color: red; color: white;'; ?>">
+                <?php echo $isSubscribed ? 'Subscribed' : 'Subscribe'; ?>
+            </button>
+        </form>
+        <form action="view.php?video_id=<?= $video_id ?>" method="post" style="display:inline-block; margin-left: 10px;">
+    <input type="hidden" name="report_video" value="1">
+    <button type="submit" style="background: #f44336; color: white; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer;">
+        🚩 Report
+    </button>
+</form>
+<form action="view.php?video_id=<?php echo $video_id; ?>" method="post" style="margin-left: 12px; display: inline-block;">
+  <label for="rating" style="color: white; margin-right: 8px; font-weight: bold;">Rate:</label>
+  <select name="rating" id="rating" onchange="this.form.submit()" style="padding: 6px; border-radius: 6px; background: #444; color: white; border: none; cursor: pointer;">
+    <option value="">--</option>
+    <?php for ($i = 1; $i <= 5; $i++): ?>
+      <option value="<?php echo $i; ?>" <?php if ($userRating == $i) echo 'selected'; ?>><?php echo $i; ?>★</option>
+    <?php endfor; ?>
+  </select>
+</form>
+
+<span style="color: #ccc; margin-left: 12px;">
+  Average rating: <?php echo $avgRating ?: 'N/A'; ?> (<?php echo $ratingCount; ?> votes)
+</span>
+
+
+        <?php endif; ?>
+        </div>
+
+        <!-- Playlist Add Section -->
+        <?php if (!empty($user_playlists)): ?>
+            <div style="margin: 20px 0; background: #333; padding: 16px; border-radius: 8px; max-width: 400px;">
+                <h3 style="color: #cc0000; margin-bottom: 10px;">Add to Playlist</h3>
+
+                <?php if (!empty($message)): ?>
+                    <p style="color: #90ee90; font-weight: bold;"><?php echo htmlspecialchars($message); ?></p>
+                <?php endif; ?>
+
+                <form action="view.php?video_id=<?php echo $video_id; ?>" method="post" style="display: flex; gap: 8px; align-items: center;">
+                    <select name="playlist_id" required style="flex-grow: 1; padding: 8px; border-radius: 6px; border: none; background: #444; color: white;">
+                        <option value="" disabled selected>Select a playlist</option>
+                        <?php foreach ($user_playlists as $playlist): ?>
+                            <option value="<?php echo $playlist['playlist_id']; ?>">
+                                <?php echo htmlspecialchars($playlist['playlist_name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <button type="submit" name="add_to_playlist" style="background-color: #cc0000; border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                        Add
+                    </button>
+                </form>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <form action="like.php" method="post" style="display:inline;">
+      <input type="hidden" name="video_id" value="<?php echo htmlspecialchars($video_id); ?>">
+      <button type="submit" style="padding: 8px 12px; background: #28a745; border: none; color: white; border-radius: 4px; cursor: pointer;">
+        👍 Like
+      </button>
+    </form>
+
+    <form action="dislike.php" method="post" style="display:inline;">
+      <input type="hidden" name="video_id" value="<?php echo htmlspecialchars($video_id); ?>">
+      <button type="submit" style="padding: 8px 12px; background: #dc3545; border: none; color: white; border-radius: 4px; cursor: pointer;">
+        👎 Dislike
+      </button>
+    </form>
+
+    <p style="color: white; margin: 8px 0;">👍 <?php echo $likeCount; ?> likes</p>
+
+    <p style="color: white; margin: 8px 0;">👎 <?php echo $dislikeCount; ?> dislikes</p>
+
+    <div class="description-box">
+        <h2>Description</h2>
+        <p><?php echo nl2br(htmlspecialchars($image['description'])); ?></p>
+    </div>
+    <?php if (!empty($tags)) : ?>
+    <div class="tags-box">
+        <strong>Tags:</strong>
+        <?php foreach ($tags as $tag): ?>
+            <span class="tag"><?php echo htmlspecialchars($tag); ?></span>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <!-- Comments Section -->
+    <div class="comments-section" style="margin-top: 40px; background: #202020; padding: 20px; border-radius: 12px; max-width: 1000px; margin-left: auto; margin-right: auto;">
+        <h2>Comments</h2>
+        
+        <!-- Comment form -->
+        <form action="view.php?video_id=<?php echo $video_id; ?>" method="post" style="margin-bottom: 20px;">
+            <textarea name="comment_text" required placeholder="Write your comment here..." rows="4" style="width: 100%; padding: 12px; border-radius: 8px; border: none; resize: vertical;"></textarea>
+            <button type="submit" style="margin-top: 10px; background-color: #cc0000; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">Post Comment</button>
+        </form>
+
+       <!-- Comments list with fixed height and scroll -->
+    <div class="comments-list" style="max-height: 300px; overflow-y: auto; background: #282828; padding: 10px; border-radius: 8px;">
+        <?php if (count($comments) === 0): ?>
+            <p style="color: #aaa;">No comments yet. Be the first to comment!</p>
+        <?php else: ?>
+            <?php foreach ($comments as $comment): ?>
+                <div class="comment" style="margin-bottom: 16px; border-bottom: 1px solid #444; padding-bottom: 8px;">
+                    <strong style="color: #cc0000;"><?php echo htmlspecialchars($comment['username']); ?></strong>
+                    <!-- Removed created_at timestamp here -->
+                    <p style="color: #ddd; margin-top: 4px; white-space: pre-wrap;"><?php echo htmlspecialchars($comment['comment_text']); ?></p>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+
+</div>
+<?php if ($reportPopup): ?>
+<script>
+    alert("Report submitted successfully.");
+</script>
+<?php endif; ?>
+
+
+</body>
+</html>
+ 

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Report Video</title>
+</head>
+<body>
+  <h1>Report This Video</h1>
+  <form action="reports.php" method="post">
+    <input type="hidden" name="video_id" value="<?php echo htmlspecialchars($_GET['video_id'] ?? ''); ?>">
+
+    <label for="reason">Reason:</label>
+    <select name="reason" id="reason" required>
+      <option value="spam">Spam</option>
+      <option value="nudity">Nudity</option>
+      <option value="hate">Hate Speech</option>
+      <option value="violence">Violence</option>
+      <option value="copyright">Copyright Infringement</option>
+      <option value="other">Other</option>
+    </select><br><br>
+
+    <label for="details">Details (optional):</label><br>
+    <textarea name="details" id="details" rows="4" cols="50"></textarea><br><br>
+
+    <button type="submit">Submit Report</button>
+  </form>
+</body>
+</html>

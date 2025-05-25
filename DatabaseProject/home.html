@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SCNZ</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #181818;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      min-height: 100vh;
+    }
+    header {
+      background: #202020;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      box-sizing: border-box;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #cc0000;
+    }
+    header .welcome {
+      font-size: 16px;
+    }
+    a.upload-btn, a.logout-btn {
+      color: #cc0000;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #cc0000;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background 0.3s;
+      margin-left: 10px;
+    }
+    a.upload-btn:hover, a.logout-btn:hover {
+      background: #cc0000;
+      color: #fff;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: #202020;
+      padding: 20px;
+      box-sizing: border-box;
+      margin-top: 56px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .sidebar h2 {
+      color: #cc0000;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+
+    .playlist {
+      margin-bottom: 20px;
+    }
+    .playlist h3 {
+      color: #fff;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+    .playlist ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      max-height: 150px;
+      overflow-y: auto;
+      border: 1px solid #444;
+      border-radius: 6px;
+      background: #282828;
+    }
+    .playlist ul li {
+      padding: 8px 12px;
+      border-bottom: 1px solid #444;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .playlist ul li:last-child {
+      border-bottom: none;
+    }
+    .playlist ul li:hover {
+      background: #cc0000;
+      color: #fff;
+    }
+    .playlist ul li a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+    }
+
+    .create-playlist-form input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background: #181818;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .create-playlist-form button {
+      width: 100%;
+      padding: 8px;
+      background: #cc0000;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .create-playlist-form button:hover {
+      background: #ff1a1a;
+    }
+
+    .content {
+      flex-grow: 1;
+      padding: 80px 20px 20px 20px;
+      max-width: 1140px;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+    .picture-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .picture-card {
+      background: #282828;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: background 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    .picture-card:hover {
+      background: #3a3a3a;
+    }
+    .thumbnail {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #000;
+      border-radius: 8px;
+    }
+    .thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .picture-info {
+      padding: 10px;
+    }
+    .picture-title {
+      font-weight: bold;
+      font-size: 16px;
+      margin: 0 0 8px;
+      color: #fff;
+    }
+    .picture-description {
+      font-size: 14px;
+      color: #ccc;
+      height: 40px;
+      overflow: hidden;
+    }
+    .picture-uploader {
+      font-size: 12px;
+      color: #999;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Picture Clone</h1>
+  <div class="welcome">
+    Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?> |
+    <a class="upload-btn" href="upload.html">Upload</a> |
+    <a class="logout-btn" href="logout.php">Logout</a>
+  </div>
+</header>
+
+<div class="sidebar">
+  <h2>Your Playlists</h2>
+
+  <!-- Create playlist form -->
+  <form class="create-playlist-form" action="create_playlist.php" method="POST">
+    <input type="text" name="playlist_name" placeholder="New playlist name" required>
+    <button type="submit">Create Playlist</button>
+  </form>
+
+  <?php if (count($playlists) === 0): ?>
+    <p style="color: #aaa;">You have no playlists yet.</p>
+  <?php else: ?>
+    <?php foreach ($playlists as $playlist): ?>
+      <div class="playlist">
+        <h3><?php echo htmlspecialchars($playlist['playlist_name']); ?></h3>
+        <?php if (count($playlist['videos']) === 0): ?>
+          <p style="color: #aaa;">No videos in this playlist.</p>
+        <?php else: ?>
+          <ul>
+            <?php foreach ($playlist['videos'] as $video): ?>
+              <li>
+                <a href="view.php?video_id=<?php echo $video['video_id']; ?>">
+                  <?php echo htmlspecialchars($video['title']); ?>
+                </a>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        <?php endif; ?>
+      </div>
+    <?php endforeach; ?>
+  <?php endif; ?>
+</div>
+
+<div class="content">
+  <div class="picture-grid">
+    <?php foreach ($videos as $video): ?>
+      <div class="picture-card" onclick="window.location.href='view.php?video_id=<?php echo $video['video_id']; ?>'">
+        <div class="thumbnail">
+          <img src="<?php echo htmlspecialchars($video['file_url']); ?>" alt="<?php echo htmlspecialchars($video['title']); ?>" />
+        </div>
+        <div class="picture-info">
+          <h3 class="picture-title"><?php echo htmlspecialchars($video['title']); ?></h3>
+          <p class="picture-description"><?php echo htmlspecialchars($video['description']); ?></p>
+          <p class="picture-uploader">Uploaded by: <?php echo htmlspecialchars($video['username']); ?></p>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
+
+</body>
+</html>

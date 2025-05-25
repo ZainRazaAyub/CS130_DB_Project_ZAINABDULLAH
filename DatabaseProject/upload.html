@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Picture</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #cc0000;
+      margin-bottom: 20px;
+    }
+
+    form {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    input[type="text"],
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 5px;
+      background: #2a2a2a;
+      color: white;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    button {
+      background-color: #cc0000;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ff1a1a;
+    }
+
+    a.back-home {
+      color: #ccc;
+      text-decoration: none;
+      margin-top: 20px;
+      display: inline-block;
+    }
+    a.back-home:hover {
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Upload a Picture</h1>
+  <form action="upload.php" method="post" enctype="multipart/form-data">
+    <label for="title">Title:</label>
+    <input type="text" name="title" id="title" placeholder="Enter picture title" required />
+
+    <label for="description">Description (optional):</label>
+    <textarea name="description" id="description" rows="4" placeholder="Write a description..."></textarea>
+
+    <label for="image">Picture File:</label>
+    <input type="file" name="image" id="image" accept="image/*" required />
+
+    <label for="tags">Tags (comma separated):</label>
+    <input type="text" name="tags" id="tags" placeholder="e.g. nature, travel, sunset" />
+
+    <button type="submit">Upload</button>
+  </form>
+
+  <a class="back-home" href="home.php">← Back to Home</a>
+</body>
+</html>

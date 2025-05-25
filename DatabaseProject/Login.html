@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zain-Site!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* Your CSS styles here (same as before) */
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #181818;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 10px;
+      padding: 2rem;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #cc0000;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      background-color: #cc0000;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #a30000;
+    }
+
+    .switch {
+      text-align: center;
+      margin-top: 1rem;
+      color: #333;
+    }
+
+    .switch a {
+      color: #cc0000;
+      text-decoration: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="form-container">
+    <!-- Sign Up Form -->
+    <form action="Login.php" method="post" id="signup-form" autocomplete="off">
+      <h2>Sign Up</h2>
+      <input type="hidden" name="action" value="signup" />
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit">Sign Up</button>
+      <div class="switch">
+        Already have an account? <a onclick="toggleForm()">Login</a>
+      </div>
+    </form>
+
+    <!-- Login Form -->
+    <form action="Login.php" method="post" id="login-form" style="display: none;" autocomplete="off">
+      <h2>Login</h2>
+      <input type="hidden" name="action" value="login" />
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+      <div class="switch">
+        Don't have an account? <a onclick="toggleForm()">Sign Up</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function toggleForm() {
+      const signup = document.getElementById('signup-form');
+      const login = document.getElementById('login-form');
+      if (signup.style.display === 'none') {
+        signup.style.display = 'block';
+        login.style.display = 'none';
+      } else {
+        signup.style.display = 'none';
+        login.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
