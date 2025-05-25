@@ -15,4 +15,4 @@ The `database-project` is a relational schema designed for a picture-sharing pla
 - Reporting system for content moderation.
 
 ## Setup:Database is made and stored with the help of XAMPP Application.All sample queries can be run through localhost/phpmyadmin.
-## Bonus Section:Yes,Frontend is implemented with the help of HTML,CSS and PHP.
+## Bonus Section:Yes, Frontend is implemented with the help of HTML,CSS and PHP.And the photos/screenshot of that frontend is provided in the document.
